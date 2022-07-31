@@ -1,48 +1,54 @@
-create database insurances;
-use insurances;
-show tables;
-create table person(driver_id int,name varchar(20),address varchar(100),primary key(driver_id));
-desc person;
-insert into person values(1,'ABC','XYZ');
-select * from person;
+CREATE TABLE PERSON(driver_id char(10), Name char(20), address char(40), PRIMARY KEY(driver_id));
+CREATE TABLE CAR (Regno char(10), model char(10), year int, PRIMARY KEY(Regno));
+CREATE TABLE ACCIDENT(report_number int, datex date, location char(40), PRIMARY KEY(report_number));
+CREATE TABLE OWNS(driver_id char(10), Regno char(10), PRIMARY KEY(driver_id, Regno), FOREIGN KEY(driver_id) REFERENCES PERSON(driver_id), FOREIGN KEY(Regno) REFERENCES CAR(Regno));
+CREATE TABLE PARTICIPATED (driver_id char(10), Regno char(10), report_number int, damage_amount int, PRIMARY KEY(driver_id, Regno, report_number), FOREIGN KEY(driver_id) REFERENCES PERSON(driver_id), FOREIGN KEY(Regno) REFERENCES CAR(Regno), FOREIGN KEY(report_number) REFERENCES ACCIDENT(report_number));
+
+INSERT INTO person VALUES('A10','James',’Renukanagar’);
+INSERT INTO person VALUES('A14','Rishabh Pant',’Srinagar’);
+INSERT INTO person VALUES('B33', ‘David',’Mumbai’);
+INSERT INTO person VALUES(‘B56',’Tom ',’Gopal Nagar’);
+INSERT INTO person VALUES(‘C14',’Ronith ',’Toy Town’);
 commit;
-create table car(reg_no varchar(15),model varchar(25),year int);
-desc car;
-alter table person;
-alter table person modify driver_id varchar(20);
-alter table car add primary key(reg_no);
-create table accident(report_num int,acc_date date,loc varchar(60),primary key(report_num));
-create table owns(d_id varchar(20),r_num varchar(15),foreign key(d_id) references person(driver_id) on delete cascade,foreign key(r_num) references car(reg_no) on delete cascade,primary key(d_id,r_num));
-desc owns;
-create table participated(d_id varchar(20),r_no varchar(15),report_num int,damage_amt int,foreign key(d_id) references person(driver_id) on delete cascade,foreign key(r_no) references car(reg_no) on delete cascade,foreign key(report_num) references accident(report_num) on delete cascade,primary key(d_id,r_no,report_num));
-insert into person values(2,'CD','Bglr');
-insert into person values(3,'GH','London');
-insert into person values(4,'PQ','Hassan');
-insert into person values(5,'YX','mumbai');
-select * from person;
+SELECT*FROM person;
+
+
+INSERT INTO car VALUES('KA690','Nano',2006);
+INSERT INTO car VALUES('KA466','Indica',2000);
+INSERT INTO car VALUES('BR720','Sumo',2010);
+INSERT INTO car VALUES('CK144','Alto',2014);
+INSERT INTO car VALUES('RL221','Zing',2015);
 commit;
-insert into car values('1a','swift',2000);
-insert into car values('1b','hyundai',2009);
-insert into car values('1c','dzire',2005);
-insert into car values('1d','duster',2007);
-select * from car;
+SELECT*FROM car;
+
+INSERT INTO accident VALUES(123,'2001-01-04','Delhi');
+INSERT INTO accident VALUES(456,'2008-06-08','Kolkata');
+INSERT INTO accident VALUES(789,'2004-04-10','Bangalore');
+INSERT INTO accident VALUES(480,'2012-12-15','Jaipur');
+INSERT INTO accident VALUES(921,'2003-08-20','Mumbai');
 commit;
-select * from owns;
-insert into owns values('1','1a');
-select * from owns;
+select*from accident;
+
+INSERT INTO owns VALUES('A01','BR720');
+INSERT INTO owns VALUES('A14','CK144');
+INSERT INTO owns VALUES('B33','KA466');
+INSERT INTO owns VALUES('B56','KA690');
+INSERT INTO owns VALUES('C14','RL221');
 commit;
-insert into owns values('2','1b');
-insert into owns values('3','1c');
-insert into owns values('4','1d');
-select * from owns;
+SELECT*FROM owns;
+
+INSERT INTO participated VALUES('A01','BR720',123,400);
+INSERT INTO participated VALUES('A14','CK144',456,1000);
+INSERT INTO participated VALUES('B33','KA466',480,20);
+INSERT INTO participated VALUES('B56','KA690',789,90000);
+INSERT INTO participated VALUES('C14','RL221',921,1500);
 commit;
-insert into accident values(1001,10/2/2005,'XYZ');
-insert into accident values(1002,11/2/2005,'ABC');
-insert into accident values(1003,19/3/2005,'DEF');
-insert into accident values(1004,20/2/2005,'XY');
-select * from accident;
-update accident set acc_date='2002-08-15' where report_num=1004;
-commit;
-insert into participated values('3','1c',1003,6000);
-select * from participated;
+SELECT*from participated;
+
+Queries for demonstration:
+1)	UPDATE participated SET damage_amount=25000 WHERE report_number=123 AND Regno=’BR720’;
+2)	INSERT INTO accident values(810, “2008-04-10”, “Chandigardh”);
+3)	SELECT COUNT(driver_id) FROM participated x,accident y WHERE x.report_number=y.report_number and year(y.datex)=2008;
+4)	SELECT COUNT(driver_id) FROM owns x, car y WHERE x.Regno=y.Regno and y.model='Nano';
+
 commit;
